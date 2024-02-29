@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.RenderStreaming.Samples;
 using UnityEditor.DeviceSimulation;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +12,7 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 public class UGCInputSystemPlugin : MonoBehaviour
 {
-    internal Touchscreen SimulatorTouchscreen;
+    internal Mouse SimulatorTouchscreen;
 
     private bool m_InputSystemEnabled;
     private bool m_Quitting;
@@ -22,6 +23,8 @@ public class UGCInputSystemPlugin : MonoBehaviour
     public int touchId;
 
     public Camera uiCamera;
+
+    private RemoteInput _remoteInput;
     
     public async void Start()
     {
@@ -30,9 +33,11 @@ public class UGCInputSystemPlugin : MonoBehaviour
         // layout.deviceClass = InputDeviceClass.GameController; // 设备类型
         // layout.interfaceName = typeof(IMyInterface).FullName; // 外部调用接口
         // layout.product = deviceName;
-            SimulatorTouchscreen = InputSystem.AddDevice<Touchscreen>($"Device Simulator Touchscreen {touchId}");
-            // uiCamera.targetDisplay = touchId;
+        // SimulatorTouchscreen = InputSystem.AddDevice<Mouse>($"Device Simulator Touchscreen {touchId}");
+        // InputSystem.EnableDevice(SimulatorTouchscreen);
 
+        // uiCamera.targetDisplay = touchId;
+        _remoteInput = RemoteInputReceiver.Create();
     }
     // private void OnMouseDown(MouseDownEvent evt) => this.SendMouseEvent((IMouseEvent) evt, MousePhase.Start);
     //
@@ -52,7 +57,8 @@ public class UGCInputSystemPlugin : MonoBehaviour
             Vector2 mousePosition = Input.mousePosition;
             Debug.Log(mousePosition);
             // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI A，并将鼠标位置传递给其他客户端。
-            Click(mousePosition);
+            Click1(mousePosition);
+            
         }
 
         if (Input.GetKeyDown(KeyCode.B))
@@ -63,34 +69,50 @@ public class UGCInputSystemPlugin : MonoBehaviour
             Vector2 mousePosition = Input.mousePosition;
 
             // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI B，并将鼠标位置传递给其他客户端。
-            Click(mousePosition);
+            // Click(mousePosition);
+            Click1(mousePosition);
         }
         
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Vector2 mousePosition = Input.mousePosition;
-            Click(mousePosition);
+            // Click(mousePosition);
+            Click1(mousePosition);
         }
     }
+    private UnityEngine.Touch m_NextTouch;
 
     internal async void Click(Vector3 position)
     {
         // Input System does not accept 0 as id
 
         InputSystem.QueueStateEvent(SimulatorTouchscreen,
-            new TouchState
+            new MouseState()
             {
-                touchId = 0,
-                phase = TouchPhase.Began,
+                buttons = (int)MouseButton.Left,
                 position = position
             });
-
+        
         InputSystem.QueueStateEvent(SimulatorTouchscreen,
-            new TouchState
+            new MouseState()
             {
-                touchId = 0,
-                phase = TouchPhase.Ended,
+                buttons = 0,
                 position = position
             });
+        // Input.SimulateTouch(this.m_NextTouch);
     }
+
+    async void Click1(Vector3 mousePosition)
+    {
+        _remoteInput.ProcessMouseMoveEvent((short)mousePosition.x, (short)mousePosition.y, 0);
+        await Task.Delay(200);
+
+        _remoteInput.ProcessMouseMoveEvent((short)mousePosition.x, (short)mousePosition.y, 1);
+
+        await Task.Delay(200);
+        
+        _remoteInput.ProcessMouseMoveEvent((short)mousePosition.x, (short)mousePosition.y, 0);
+
+    }
+
 }
