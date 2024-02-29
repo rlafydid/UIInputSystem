@@ -48,38 +48,38 @@ public class UGCInputSystemPlugin : MonoBehaviour
     // private void OnMouseLeave(MouseLeaveEvent evt) => this.SendMouseEvent((IMouseEvent) evt, MousePhase.End)
     // ;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (touchId != 0)
-                return;
-            Vector2 mousePosition = Input.mousePosition;
-            Debug.Log(mousePosition);
-            // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI A，并将鼠标位置传递给其他客户端。
-            Click1(mousePosition);
-            
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            if (touchId != 1)
-                return;
-            
-            Vector2 mousePosition = Input.mousePosition;
-
-            // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI B，并将鼠标位置传递给其他客户端。
-            // Click(mousePosition);
-            Click1(mousePosition);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Vector2 mousePosition = Input.mousePosition;
-            // Click(mousePosition);
-            Click1(mousePosition);
-        }
-    }
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.A))
+    //     {
+    //         if (touchId != 0)
+    //             return;
+    //         Vector2 mousePosition = Input.mousePosition;
+    //         Debug.Log(mousePosition);
+    //         // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI A，并将鼠标位置传递给其他客户端。
+    //         Click1(mousePosition);
+    //         
+    //     }
+    //
+    //     if (Input.GetKeyDown(KeyCode.B))
+    //     {
+    //         if (touchId != 1)
+    //             return;
+    //         
+    //         Vector2 mousePosition = Input.mousePosition;
+    //
+    //         // 在本地玩家上创建一个 RPC 请求，该请求将参数设置为 UI B，并将鼠标位置传递给其他客户端。
+    //         // Click(mousePosition);
+    //         Click1(mousePosition);
+    //     }
+    //     
+    //     if (Input.GetKeyDown(KeyCode.Q))
+    //     {
+    //         Vector2 mousePosition = Input.mousePosition;
+    //         // Click(mousePosition);
+    //         Click1(mousePosition);
+    //     }
+    // }
     private UnityEngine.Touch m_NextTouch;
 
     internal async void Click(Vector3 position)
@@ -113,6 +113,30 @@ public class UGCInputSystemPlugin : MonoBehaviour
         
         _remoteInput.ProcessMouseMoveEvent((short)mousePosition.x, (short)mousePosition.y, 0);
 
+    }
+    
+    private float _timer;
+    private float y = 200;
+    // Update is called once per frame
+    void Update()
+    {
+        _timer += Time.deltaTime;
+        if (_timer > 2)
+        {
+            SimulateClick();
+            _timer = 0;
+        }
+
+        // y += Time.deltaTime * 10;
+        // _remoteInput.ProcessMouseMoveEvent(200, (short)y, 1);
+    }
+
+    async void SimulateClick()
+    {
+        Debug.Log($"开始模拟点击按钮");
+        _remoteInput.ProcessMouseMoveEvent(200,100, 1);
+        await Task.Delay(100);
+        _remoteInput.ProcessMouseMoveEvent(200,100, 0);
     }
 
 }
