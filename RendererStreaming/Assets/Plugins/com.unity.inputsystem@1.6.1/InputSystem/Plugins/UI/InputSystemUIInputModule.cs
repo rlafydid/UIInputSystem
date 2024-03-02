@@ -1631,7 +1631,7 @@ namespace UnityEngine.InputSystem.UI
         private int GetPointerStateIndexFor(InputControl control, bool createIfNotExists = true)
         {
             // Debug.Log($"GetPointerStateIndexFor frameCount {Time.frameCount} device {control.device.GetType()} id {control.device.deviceId}");
-            Debug.Log($"test device {control.device.GetType()} id {control.device.deviceId}");
+            // Debug.Log($"test device {control.device.GetType()} id {control.device.deviceId}");
             Debug.Assert(control != null, "Control must not be null");
 
             ////REVIEW: Any way we can cut down on the hops all over memory that we're doing here?

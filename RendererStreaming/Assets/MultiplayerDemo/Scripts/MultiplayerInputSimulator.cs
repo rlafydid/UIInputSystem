@@ -17,6 +17,9 @@ public class MultiplayerInputSimulator : MonoBehaviour
     
     void Start()
     {
+        if (!Application.isPlaying)
+            return;
+        
         InputUser user = InputUser.CreateUserWithoutPairedDevices();
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomMouse>(), user);
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomKeyboard>(), user);
