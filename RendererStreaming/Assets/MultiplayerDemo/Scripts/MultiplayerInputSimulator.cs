@@ -14,19 +14,22 @@ public class MultiplayerInputSimulator : MonoBehaviour
     }
 
     private RemoteInput _remoteInput;
-    
-    void Start()
+
+    protected InputUser InputUser { get; set; }
+
+    protected virtual void Start()
     {
         if (!Application.isPlaying)
             return;
-        
+
         InputUser user = InputUser.CreateUserWithoutPairedDevices();
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomMouse>(), user);
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomKeyboard>(), user);
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomGamepad>(), user);
         user = InputUser.PerformPairingWithDevice(InputSystem.AddDevice<CustomTouchscreen>(), user);
         _remoteInput = new RemoteInput(ref user);
-        
+
+        InputUser = user;
         this.GetComponent<MultiplayerGraphicRaycaster>()?.SetInputUser(user);
     }
 }

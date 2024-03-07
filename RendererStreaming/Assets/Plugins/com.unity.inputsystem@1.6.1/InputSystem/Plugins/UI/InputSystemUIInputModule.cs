@@ -116,6 +116,8 @@ namespace UnityEngine.InputSystem.UI
             set => m_LocalMultiPlayerRoot = value;
         }
 
+        public UGCMultiplayerEventSystem _ugcMultiplayerEventSystem;
+        
         /// <summary>
         /// Called by <c>EventSystem</c> when the input module is made current.
         /// </summary>
@@ -268,7 +270,10 @@ namespace UnityEngine.InputSystem.UI
             }
 
             // Otherwise pass it along to the normal raycasting logic.
-            eventSystem.RaycastAll(eventData, m_RaycastResultCache);
+            if(_ugcMultiplayerEventSystem != null)
+                _ugcMultiplayerEventSystem.RaycastAll(eventData, m_RaycastResultCache);
+            else
+                eventSystem.RaycastAll(eventData, m_RaycastResultCache);
             var result = FindFirstRaycast(m_RaycastResultCache);
             m_RaycastResultCache.Clear();
             return result;
@@ -279,7 +284,7 @@ namespace UnityEngine.InputSystem.UI
         {
             var eventData = state.eventData;
             
-            // Debug.Log($"frameCount {Time.frameCount} device {state.eventData.device.GetType()} id {state.eventData.device.deviceId} pos {state.eventData.position}");
+            // Debug.Log($"frameCount {Time.frameCount} device {state.eventData.device.GetType()} id {state.eventData.device.deviceId} pos {state.eventData.position} stati {state.eventData.pointerType.}");
             // Sync position.
             var pointerType = eventData.pointerType;
             if (pointerType == UIPointerType.MouseOrPen && Cursor.lockState == CursorLockMode.Locked)
@@ -1441,6 +1446,9 @@ namespace UnityEngine.InputSystem.UI
         {
             base.OnEnable();
 
+            if(eventSystem is UGCMultiplayerEventSystem ugcMultiplayerEventSystem)
+                this._ugcMultiplayerEventSystem = ugcMultiplayerEventSystem;
+            
             if (m_OnControlsChangedDelegate == null)
                 m_OnControlsChangedDelegate = OnControlsChanged;
             InputActionState.s_GlobalState.onActionControlsChanged.AddCallback(m_OnControlsChangedDelegate);

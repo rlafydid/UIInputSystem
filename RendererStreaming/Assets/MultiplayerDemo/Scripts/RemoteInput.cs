@@ -140,6 +140,8 @@ namespace Unity.RenderStreaming.Samples
         private KeyboardState m_keyboardState = new KeyboardState();
         private bool disposed;
 
+        public static UE.Vector2 Offset { get => new UE.Vector2(UE.Screen.width * 4, 0);}
+
         public RemoteInput(ref InputUser user)
         {
             RemoteMouse = user.pairedDevices.FirstOrDefault(device => device is Mouse) as Mouse;
@@ -362,7 +364,8 @@ namespace Unity.RenderStreaming.Samples
             {
                 position = pos,
                 delta = delta,
-                buttons = button
+                buttons = button,
+                displayIndex = 1
             });
             m_prevMousePos = pos;
         }

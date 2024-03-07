@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CustomGamepad : Gamepad
+public class CustomKeyboard : Keyboard,ICustomDevice
 {
     public override void MakeCurrent()
     {
     }
+
+    public int UserId { get; set; }
 }

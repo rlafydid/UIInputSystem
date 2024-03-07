@@ -239,7 +239,6 @@ namespace UnityEngine.InputSystem
         {
             base.MakeCurrent();
             current = this;
-            Debug.Log($"make current {this.device.deviceId}");
         }
 
         /// <summary>

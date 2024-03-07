@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Unity.RenderStreaming.Samples;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 enum SimulateType
 {
@@ -46,11 +47,18 @@ public class MultiplayerInputSimulatorTest : MonoBehaviour
     {
         dragValue = _direction == DragDirection.Horizontal ? dragStartX : dragStartY;
         _inputSimulator = this.GetComponent<MultiplayerInputSimulator>();
+        
+        Debug.Log($"target displau {this.GetComponent<GraphicRaycaster>().eventCamera.targetDisplay}");
+        
     }
     
     // Update is called once per frame
     void Update()
     {
+        if (Keyboard.current[Key.A].isPressed && !isPressed)
+        {
+            SimulateClick(Mouse.current.position.ReadValue());
+        }
         if (!isOpen)
             return;
         _timer += Time.deltaTime;
@@ -100,10 +108,7 @@ public class MultiplayerInputSimulatorTest : MonoBehaviour
                 break;
         }
 
-        if (Keyboard.current[Key.A].isPressed && !isPressed)
-        {
-            SimulateClick(Mouse.current.position.ReadValue());
-        }
+        
     }
 
 
