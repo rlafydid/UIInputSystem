@@ -55,12 +55,13 @@ public class MultiplayerInputSimulatorTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        if (!isOpen)
+            return;
         if (Keyboard.current[Key.A].isPressed && !isPressed)
         {
             SimulateClick(Mouse.current.position.ReadValue());
         }
-        if (!isOpen)
-            return;
         _timer += Time.deltaTime;
         switch (_simulateType)
         {

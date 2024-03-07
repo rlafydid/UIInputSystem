@@ -284,7 +284,7 @@ namespace UnityEngine.InputSystem.UI
         {
             var eventData = state.eventData;
             
-            // Debug.Log($"frameCount {Time.frameCount} device {state.eventData.device.GetType()} id {state.eventData.device.deviceId} pos {state.eventData.position} stati {state.eventData.pointerType.}");
+            Debug.Log($" device {state.eventData.device.GetType()} id {state.eventData.device.deviceId} display {state.eventData.displayIndex}");
             // Sync position.
             var pointerType = eventData.pointerType;
             if (pointerType == UIPointerType.MouseOrPen && Cursor.lockState == CursorLockMode.Locked)

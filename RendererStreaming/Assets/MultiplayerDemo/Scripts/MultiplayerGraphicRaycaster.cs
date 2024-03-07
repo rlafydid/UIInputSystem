@@ -12,12 +12,18 @@ namespace UnityEngine.UI
         private InputUser _inputUser;
         private HashSet<int> _pairedDevices;
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.eventCamera.targetDisplay = 1;
+        }
+
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
         {
             if (_pairedDevices == null ||
                 (eventData is ExtendedPointerEventData data && _pairedDevices.Contains(data.device.deviceId)))
             {
-                eventData.position -= RemoteInput.Offset;
+                eventData.displayIndex = 1;
                 base.Raycast(eventData, resultAppendList);
             }
         }
